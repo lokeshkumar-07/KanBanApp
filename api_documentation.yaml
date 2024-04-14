@@ -1,0 +1,463 @@
+openapi: 3.0.3
+info:
+  title: Kanban App - OpenAPI 3.0
+  description: This is KanBan App Api
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: lokesh@mail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://127.0.0.1:5000
+tags:
+  - name: Users
+    description: Everything about your Users
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+      
+  - name: Lists
+    description: Everything about your Lists
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  
+  - name: Cards
+    description: Everything about your Cards
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  
+paths:
+  /login:
+    post:
+      tags:
+        - Users
+      summary: User Login
+      description: User can login or signin with this api
+      operationId: userLogin
+      requestBody:
+        description: User Login body email password
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+                  
+        '405':
+          description: Invalid input
+      
+  /api/users:
+    post:
+      tags:
+        - Users
+      summary: create a new User
+      description: Multiple status values can be provided with comma separated strings
+      operationId: userSignUp
+      requestBody:
+        description: User can signup with uername, email and password
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignup'
+      responses:
+        '200':
+          description: successful operation
+          
+        '400':
+          description: Invalid status value
+      
+  /api/lists:
+    get:
+      tags:
+        - Lists
+      summary: Finds lists 
+      description: Find lists for perticular user
+      operationId: findLists
+      
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lists'          
+        '400':
+          description: Invalid tag value
+        '404':
+          description: Not Found
+    
+    post:
+      tags:
+        - Lists
+      summary: post List
+      description: User can post a new list
+      operationId: postList
+      requestBody:
+        description: User can create a new list
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostList'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lists'          
+        '400':
+          description: Invalid tag value
+        
+      
+  /api/lists/{listId}:
+    get:
+      tags:
+        - Lists
+      summary: Find list by ID
+      description: Returns a single List
+      operationId: getListById
+      parameters:
+        - name: listId
+          in: path
+          description: ID of list to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lists'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: List not found
+    
+    put:
+      tags:
+        - Lists
+      summary: update List
+      description: User can update a list
+      operationId: updateListById
+      parameters:
+        - name: listId
+          in: path
+          description: List id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: User can update a list Body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostList'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lists'          
+        '400':
+          description: Invalid Response
+    
+    delete:
+      tags:
+        - Lists
+      summary: Deletes a list
+      description: delete a list
+      operationId: deleteListById
+      parameters:
+    
+        - name: listId
+          in: path
+          description: List id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid list value
+        '404':
+          description: Not Found
+    
+      
+  /api/cards/{listId}:    
+    get:
+      tags:
+        - Cards
+      summary: Find all cards by according List
+      description: Returns all cards accrording a list
+      operationId: getCardsByListId
+      parameters:
+        - name: listId
+          in: path
+          description: ID of list for which cards to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCard'          
+
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: cards not found
+    
+    post:
+      tags:
+        - Cards
+      summary: create a card
+      description: create a card within a list
+      operationId: createCard
+      parameters:
+        - name: listId
+          in: path
+          description: ID of list that in which card
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: User can create a card by body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCard'
+      responses:
+        '400':
+          description: Invalid Response
+        '405':
+          description: Invalid input
+      
+            
+          
+            
+            
+  /api/cards/{listId}/{cardId}:
+    get:
+      tags:
+        - Cards
+      summary: Find cards by Card Id
+      description: Returns cards accrording a CardId
+      operationId: getCardByCard
+      parameters:
+        - name: listId
+          in: path
+          description: ID of list
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: cardId
+          in: path
+          description: ID of card
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCard'          
+
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: card not found
+    
+    put:
+      tags:
+        - Cards
+      summary: update a card
+      description: update a card with cardId
+      operationId: updateCardByCardId
+      parameters:
+        - name: listId
+          in: path
+          description: ID of list
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: cardId
+          in: path
+          description: ID of card
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: User can create a card by body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCard'
+      responses:
+        '405':
+          description: Invalid input
+        '404':
+          description: Not Found
+          
+    
+    delete:
+      tags:
+        - Cards
+      summary: delete a card
+      description: delete a card with cardId
+      operationId: deleteCardByCardId
+      parameters:
+        - name: listId
+          in: path
+          description: ID of list
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: cardId
+          in: path
+          description: ID of card
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '405':
+          description: Invalid input
+        '404':
+          description: Not Found
+  
+
+components:
+  schemas:
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          example: lokesh@mail.com
+        password:
+          type: string
+          example: password@123
+    
+    UserSignup:
+      type: object
+      properties:
+        email:
+          type: string
+          example: lokesh@mail.com
+        username:
+          type: string
+          example: lokesh123
+        password:
+          type: string
+          example: password@123
+        
+    Lists:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: Todo
+        description:
+          type: string
+          example: This is Todo List
+        user_id:
+          type: integer
+          example: 2
+        review_id:
+          type: string
+          example: 2 january 2022 6:30pm
+      
+    PostList:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Todo
+        description:
+          type: string
+          example: This is Todo List
+    
+    PostCard:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Home work
+        content:
+          type: string
+          example: Home work card
+        deadline:
+          type: string
+          example: 22-12-2022
+        mark:
+          type: string
+          example: Not Complected
+        complete_date:
+          type: string
+          example: 18-12-2022
+    
+    GetCard:
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Home work
+        content:
+          type: string
+          example: Home work card
+        deadline:
+          type: string
+          example: 22-12-2022
+        mark:
+          type: string
+          example: Not Complected
+        complete_date:
+          type: string
+          example: 18-12-2022
+        list_id: 
+          type: integer
+          example: 2
+        user_id:
+          type: integer
+          example: 1
+          
+    

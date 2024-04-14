@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Pending Tasks</title>
+    <style type="text/css">
+        @page {
+            margin: 3cm;
+            @top-left {
+                background: #82b965;
+                content: counter(page);
+                height: 1cm;
+                text-align: center;
+                width: 1cm;
+            }
+            @top-center {
+                background: #82b965;
+                content:'';
+                display: block;
+                height: 0.05cm;
+                opacity: .5;
+                width: 100%;
+            }
+            @top-right {
+                content: string(heading);
+                font-size: 9pt;
+                height: 1cm;
+                vertical-align: middle;
+                width: 100%;
+            }  
+        }
+        @page: first {
+            background-size: cover;
+            margin: 0;
+        }
+
+        @page chapter {
+            background: #82b965;
+            margin: 0;
+            @top-left { content: none}
+            @top-center { content: none}
+            @top-right { content: none}
+        }
+        
+        footer {
+          text-align: center;
+          padding: 3px;
+          background-color: DarkSalmon;
+          color: white;
+        }
+    </style>
+</head>
+<body>
+    <center><h1> Pending Tasks</h1>
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</center>
+
+        <h4>Cards</h4>
+        {% for card in cards %} 
+        <div>
+            <div>List Title: {{card.title}}</div>
+            <div>List ID: {{card.list_id}}</div>
+            <div>Card ID: {{card.id}}</div>
+            <div>Card Content: {{card.content}}</div>
+            <div>Card Deadline: {{card.deadline}}</div>
+            <div>Card Status: {{card.mark}}</div>
+        </div>
+        <p></p>
+        {% endfor %}
+
+</body>
+<footer>
+    <p>&copy; | {{email}} | 2022</p>
+</footer>
+</html>                                                  
